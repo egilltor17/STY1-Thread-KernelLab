@@ -8,10 +8,10 @@
 MODULE_LICENSE("GPL");
 /* YOU MUST PUT YOUR NAME IN THE AUTHOR INFO */ 
 /* missing code  1/9 */ 
-MODULE_AUTHOR("");
+MODULE_AUTHOR("egilltor17_ernir17_hallgrimura17");
 /* YOU MUST ADD A DESCRIPTION OF YOUR MODULE */
 /* missing code 2/9 */ 
-MODULE_DESCRIPTION("");
+MODULE_DESCRIPTION("Kernel module to make a RaspberryPi light up LEDs based on a buffer's capasity");
 MODULE_VERSION("0.1");
 
 /* BCM pinout: This is how you should connect the leds to the Pi. 
@@ -27,6 +27,10 @@ MODULE_VERSION("0.1");
 #define R 27 // GPIO pin of red on 3-led
 #define G 23 // GPIO pin of green on 3-led
 #define B 22 // GPIO pin of blue on 3-led
+
+
+#define ON  1 
+#define OFF 1 
 
 int led_init_ok = 0;
 int c; // used for error checking.
@@ -44,6 +48,8 @@ static int init_light( void ) {
    * int gpio_request(unsigned int gpio, const char *label); *
    ***********************************************************/
   c += gpio_request(R, "red");
+  c += gpio_request(G, "green");
+  c += gpio_request(B, "blue");
   
   /* missing code 3/9 */ 
   
@@ -59,7 +65,9 @@ static int init_light( void ) {
    * int gpio_direction_input(unsigned int gpio);
    * int gpio_direction_output(unsigned int gpio, int value);
    ***********************************************************/
-  c += gpio_direction_output(R, 1);
+  c += gpio_direction_output(R, ON);
+  c += gpio_direction_output(G, ON);
+  c += gpio_direction_output(B, ON);
   
   /* missing code 4/9 */ 
 
@@ -70,7 +78,11 @@ static int init_light( void ) {
   printk(KERN_INFO "kmt Waiting 2 seconds then turning defaulting to lights off.\n");
   
   /* missing code 5/9 */ 
-  
+  mdelay(2000);
+  gpio_set_value(R, OFF);
+  gpio_set_value(G, OFF);
+  gpio_set_value(B, OFF);
+
   /***********************************************************
    * HINT: mdelay() and gpio_set_value()                     *
    ***********************************************************/
@@ -90,7 +102,9 @@ static void exit_light ( void ) {
 
   
   /* missing code 6/9 */ 
-
+  gpio_free(R);
+  gpio_free(G);
+  gpio_free(B);
 
   return;
 }
@@ -111,6 +125,11 @@ static ssize_t light_store( struct kobject* kobj,
   /* The input is a string of the format "R G B\n" where each letter 
    *  is either a 0 or 1 
    */
+   
+  /*gpio_set_value(R, buf[0]);
+  gpio_set_value(G, buf[1]);
+  gpio_set_value(B, buf[2]); */
+
   
   return count;
 }
