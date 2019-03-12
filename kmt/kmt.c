@@ -47,11 +47,12 @@ static int init_light( void ) {
    * USE THE gpio_request() FUNCTION FOR THIS.               *
    * int gpio_request(unsigned int gpio, const char *label); *
    ***********************************************************/
+  
+  /* missing code 3/9 */ 
   c += gpio_request(R, "red");
   c += gpio_request(G, "green");
   c += gpio_request(B, "blue");
   
-  /* missing code 3/9 */ 
   
   if (c != 0) {
     printk(KERN_INFO "kmt Requsting of one or more pins has failed\n");
@@ -65,12 +66,12 @@ static int init_light( void ) {
    * int gpio_direction_input(unsigned int gpio);
    * int gpio_direction_output(unsigned int gpio, int value);
    ***********************************************************/
+
+  /* missing code 4/9 */ 
   c += gpio_direction_output(R, ON);
   c += gpio_direction_output(G, ON);
   c += gpio_direction_output(B, ON);
   
-  /* missing code 4/9 */ 
-
   if (c != 0) {
     printk(KERN_INFO "kmt Setting Directon of one or more pins has failed\n");
     return -2;
@@ -125,8 +126,11 @@ static ssize_t light_store( struct kobject* kobj,
   /* The input is a string of the format "R G B\n" where each letter 
    *  is either a 0 or 1 
    */
-   
-  /*gpio_set_value(R, buf[0]);
+
+  buf[0] = gpio_get_value(R);
+  buf[1] = gpio_get_value(G);
+  buf[2] = gpio_get_value(B);
+  /* gpio_set_value(R, buf[0]);
   gpio_set_value(G, buf[1]);
   gpio_set_value(B, buf[2]); */
 
@@ -152,8 +156,12 @@ static ssize_t light_show( struct kobject* kobj,
    *  is either a 0 or 1 
    */
 
+  gpio_set_value(R, buf[0]);
+  gpio_set_value(G, buf[1]);
+  gpio_set_value(B, buf[2]);
+
   // THE RETURN VALUE SHOULD BE THE LENGTH OF THE STRING IN buf.
-  return 0;
+  return 3;
 }
 
 // ## sysfs variables ## 
@@ -189,6 +197,7 @@ static int kmt_sysfs_init( void ) {
 
   
   /* missing code 9/9 */
+  // struct kobject* kobject_create_and_add(name, parent);
 
 
   printk(KERN_INFO "kmt Finished sysfs setup.\n");
