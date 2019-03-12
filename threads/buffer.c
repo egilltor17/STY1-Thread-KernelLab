@@ -36,7 +36,7 @@ void buffer_init(unsigned int buffersize) {
       ******************************************************/
      semaphor.pshared = 0;
      semaphor.value = 1;
-     semaphor.ret = Sem_init(&semaphor.sem, semaphor.pshared, semaphor.value);
+     Sem_init(&semaphor.sem, semaphor.pshared, semaphor.value);
 
      // ## Try to open the /sys/light/light file.
      if( (light = fopen(LIGHTFILE, "r+")) == NULL) { 

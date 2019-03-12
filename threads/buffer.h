@@ -32,7 +32,7 @@ struct semaphor{
     int pshared;
     int ret;
     int value;
-}
+};
 
 // ## Random sleep function in milliseconds ##################//
 long rand_sleep(int ms);
