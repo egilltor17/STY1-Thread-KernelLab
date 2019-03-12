@@ -121,12 +121,18 @@ void* consumer( void* vargp ) {
   while (consumers_run) {
     if (num_slots - free_slots == 0){
           printf("The buffer is empty :( \n");
-          // As the buffer is empty we start with a green light 
+          // As the buffer is empty we start with a green light.
           //             "R G B\n".
           fprintf(light, "0 1 0\n");
           fflush(light);
+     } else if (free_slots == 0) {
+          printf("The buffer is full :( \n");
+          // As the buffer is full so we show a green light.
+          //             "R G B\n".
+          fprintf(light, "1 0 0\n");
+          fflush(light);
      } else {
-          // Neither full nor empty so we show blue/yellow.
+          // Neither full nor empty so we show a blue light.
           //             "R G B\n".
           fprintf(light, "0 0 1\n");
           fflush(light);
@@ -164,8 +170,9 @@ pthread_t spawn_producer( thread_info *arg )
       * HERE YOU MUST CREATE A producer THREAD HERE        *
       ******************************************************/
      pthread_t tid;
-     Pthread_create(&tid, NULL, producer, s);
-     return 0;
+     int s;
+     Pthread_create(&tid, NULL, producer, &s);
+     return tid;
 }
 
 pthread_t spawn_consumer( thread_info *arg )
@@ -177,6 +184,7 @@ pthread_t spawn_consumer( thread_info *arg )
       * HERE YOU MUST CREATE A consumer THREAD HERE        *
       ******************************************************/
      pthread_t tid;
-     Pthread_create(&tid, NULL, consumer, s);
-     return 0;
+     int s;
+     Pthread_create(&tid, NULL, consumer, &s);
+     return tid;
 }
