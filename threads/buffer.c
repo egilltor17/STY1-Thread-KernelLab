@@ -102,13 +102,13 @@ void* producer( void* vargp ) {
 
           printf("producing for slot %d\n", last_slot);
           buff[last_slot] = produce(last_slot);
-          P(&semaphor.sem);
+          sem_wait(&semaphor.sem);
           last_slot = last_slot + 1;  // filled a slot so move index
           if ( last_slot == num_slots ) {
                last_slot = 0;         // we must not go out-of-bounds.
           }
           free_slots = free_slots - 1; // one less free slots available
-          V(&semaphor.sem);
+          sem_post(&semaphor.sem);
      }
   } // end while
 
