@@ -34,9 +34,9 @@ void buffer_init(unsigned int buffersize) {
       * NOTE!!! YOU MUST FIRST CREATE THE SEMAPHORES       *
       * IN buffer.h                                        *
       ******************************************************/
-     semaphor.pshared = 0;
-     semaphor.value = 1;
-     Sem_init(&semaphor.sem, semaphor.pshared, semaphor.value);
+     pshared = 0;
+     value = 1;
+     Sem_init(&sem, pshared, value);
 
      // ## Try to open the /sys/light/light file.
      if( (light = fopen(LIGHTFILE, "r+")) == NULL) { 
