@@ -36,7 +36,7 @@ void buffer_init(unsigned int buffersize) {
       ******************************************************/
      pshared = 0;
      value = 1;
-     Sem_init(&sem, pshared, value);
+     ret = sem_init(&sem, pshared, value);
 
      // ## Try to open the /sys/light/light file.
      if( (light = fopen(LIGHTFILE, "r+")) == NULL) { 
@@ -102,13 +102,13 @@ void* producer( void* vargp ) {
 
           printf("producing for slot %d\n", last_slot);
           buff[last_slot] = produce(last_slot);
-          sem_wait(&semaphor.sem);
+          sem_wait(&sem);
           last_slot = last_slot + 1;  // filled a slot so move index
           if ( last_slot == num_slots ) {
                last_slot = 0;         // we must not go out-of-bounds.
           }
           free_slots = free_slots - 1; // one less free slots available
-          sem_post(&semaphor.sem);
+          sem_post(&sem);
      }
   } // end while
 
