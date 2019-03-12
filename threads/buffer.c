@@ -34,7 +34,9 @@ void buffer_init(unsigned int buffersize) {
       * NOTE!!! YOU MUST FIRST CREATE THE SEMAPHORES       *
       * IN buffer.h                                        *
       ******************************************************/
-
+     semaphor.pshared = 0;
+     semaphor.value = 1;
+     semaphor.ret = Sem_init(&semaphor.sem, semaphor.pshared, semaphor.value);
 
      // ## Try to open the /sys/light/light file.
      if( (light = fopen(LIGHTFILE, "r+")) == NULL) { 
@@ -94,7 +96,6 @@ void* producer( void* vargp ) {
       * MISSING CODE 3/6                                   *
       * HERE YOU MUST ADD THREAD SAFTY TO THE CODE BELOW   *
       ******************************************************/
-     
 
      // ## if there is a free slot we produce to fill it.
      if( free_slots ) {
