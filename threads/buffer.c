@@ -102,13 +102,13 @@ void* producer( void* vargp ) {
 
           printf("producing for slot %d\n", last_slot);
           buff[last_slot] = produce(last_slot);
-          sem_wait(&sem);
+          P(&sem);
           last_slot = last_slot + 1;  // filled a slot so move index
           if ( last_slot == num_slots ) {
                last_slot = 0;         // we must not go out-of-bounds.
           }
           free_slots = free_slots - 1; // one less free slots available
-          sem_post(&sem);
+          V(&sem);
      }
   } // end while
 
@@ -138,9 +138,8 @@ void* consumer( void* vargp ) {
       * HERE YOU MUST ADD THREAD SAFTY TO THE CODE BELOW   *
       ******************************************************/
      
-
+     P(&sem);
      if (num_slots - free_slots) {
-
           printf("consuming from slot %d value:", first_slot);
           printf(" %d \n", consume(buff[first_slot]));
           buff[first_slot] = -1;            // zero the slot consumed.
@@ -149,8 +148,8 @@ void* consumer( void* vargp ) {
                first_slot = 0;              // we must not go out-of-bounds.
           }
           free_slots = free_slots + 1;      // one more free slots available
-          
      }  
+     V(&sem);
      
   } // end while
   return NULL;
@@ -164,7 +163,8 @@ pthread_t spawn_producer( thread_info *arg )
       * MISSING CODE 5/6                                   *
       * HERE YOU MUST CREATE A producer THREAD HERE        *
       ******************************************************/
-    
+     pthread_t tid;
+     Pthread_create(&tid, NULL, producer, s);
      return 0;
 }
 
@@ -176,6 +176,7 @@ pthread_t spawn_consumer( thread_info *arg )
       * MISSING CODE 6/6                                   *
       * HERE YOU MUST CREATE A consumer THREAD HERE        *
       ******************************************************/
-     
+     pthread_t tid;
+     Pthread_create(&tid, NULL, consumer, s);
      return 0;
 }
