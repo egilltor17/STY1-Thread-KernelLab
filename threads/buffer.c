@@ -125,12 +125,6 @@ void* consumer( void* vargp ) {
           //             "R G B\n".
           fprintf(light, "0 1 0\n");
           fflush(light);
-     } else if (free_slots == 0) {
-          printf("The buffer is full :( \n");
-          // As the buffer is full so we show a green light.
-          //             "R G B\n".
-          fprintf(light, "1 0 0\n");
-          fflush(light);
      } else {
           // Neither full nor empty so we show a blue light.
           //             "R G B\n".
