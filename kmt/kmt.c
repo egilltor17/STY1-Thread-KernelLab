@@ -129,7 +129,7 @@ static ssize_t light_store( struct kobject* kobj,
    *  is either a 0 or 1 
    */
   if(count != 6 || buf[1] != ' ' || buf[3] != ' ' || buf[5] != '\n') {
-    return 0;
+    return -1;
   }
   
 
@@ -204,16 +204,13 @@ static int kmt_sysfs_init( void ) {
   /* missing code 9/9 */
   
 
-  light_kobj = kobject_create_and_add("light", NULL);
-  
-  if (light_kobj == NULL) {
+    
+  if ((light_kobj = kobject_create_and_add("light", NULL)) == NULL) {
     printk(KERN_INFO "kobject_create_and_add has failed\n");
     return -2;
   }
-
-  c = sysfs_create_file(light_kobj, &light_attr.attr);
-
-  if (c != 0) {
+  
+  if ((c = sysfs_create_file(light_kobj, &light_attr.attr)) != 0) {
     printk(KERN_INFO "sysfs_create_file has failed\n");
     return -2;
   }
