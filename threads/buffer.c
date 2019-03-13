@@ -34,10 +34,9 @@ void buffer_init(unsigned int buffersize) {
       * NOTE!!! YOU MUST FIRST CREATE THE SEMAPHORES       *
       * IN buffer.h                                        *
       ******************************************************/
-     pshared = 0;
-     value = 1;
-     ret = sem_init(&sem, pshared, value);
-
+     Sem_init(&semCons, 0, 0);
+     Sem_init(&semProd, 0, buffersize);
+     Sem_init(&sem, 0, 1);
      // ## Try to open the /sys/light/light file.
      if( (light = fopen(LIGHTFILE, "r+")) == NULL) { 
           // failed and thus we open a local directory file instead.
@@ -98,18 +97,17 @@ void* producer( void* vargp ) {
       ******************************************************/
 
      // ## if there is a free slot we produce to fill it.
+     P(&semProd);
      if( free_slots ) {
-
           printf("producing for slot %d\n", last_slot);
           buff[last_slot] = produce(last_slot);
-          P(&sem);
           last_slot = last_slot + 1;  // filled a slot so move index
           if ( last_slot == num_slots ) {
                last_slot = 0;         // we must not go out-of-bounds.
           }
           free_slots = free_slots - 1; // one less free slots available
-          V(&sem);
      }
+     V(&semCons);
   } // end while
 
   return NULL;
@@ -144,7 +142,7 @@ void* consumer( void* vargp ) {
       * HERE YOU MUST ADD THREAD SAFTY TO THE CODE BELOW   *
       ******************************************************/
      
-     P(&sem);
+     P(&semCons);
      if (num_slots - free_slots) {
           printf("consuming from slot %d value:", first_slot);
           printf(" %d \n", consume(buff[first_slot]));
@@ -155,7 +153,7 @@ void* consumer( void* vargp ) {
           }
           free_slots = free_slots + 1;      // one more free slots available
      }  
-     V(&sem);
+     V(&semProd);
      
   } // end while
   return NULL;
