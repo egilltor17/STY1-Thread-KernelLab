@@ -128,10 +128,14 @@ static ssize_t light_store( struct kobject* kobj,
   /* The input is a string of the format "R G B\n" where each letter 
    *  is either a 0 or 1 
    */
+  if(count != 6 || buf[1] != ' ' || buf[3] != ' ' || buf[5] != '\n') {
+    return 0;
+  }
   
-  gpio_set_value(R, buf[0]);
-  gpio_set_value(G, buf[2]);
-  gpio_set_value(B, buf[4]);
+
+  gpio_set_value(R, buf[0] == '1');
+  gpio_set_value(G, buf[2] == '1');
+  gpio_set_value(B, buf[4] == '1');
 
   return count;
 }
@@ -201,10 +205,16 @@ static int kmt_sysfs_init( void ) {
   
 
   light_kobj = kobject_create_and_add("light", NULL);
+  
+  if (light_kobj == NULL) {
+    printk(KERN_INFO "kobject_create_and_add has failed\n");
+    return -2;
+  }
+
   c = sysfs_create_file(light_kobj, &light_attr.attr);
 
   if (c != 0) {
-    printk(KERN_INFO "sysfs has failed\n");
+    printk(KERN_INFO "sysfs_create_file has failed\n");
     return -2;
   }
 
