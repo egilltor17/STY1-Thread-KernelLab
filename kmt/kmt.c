@@ -52,7 +52,6 @@ static int init_light( void ) {
   c += gpio_request(G, "green");
   c += gpio_request(B, "blue");
   
-  
   if (c != 0) {
     printk(KERN_INFO "kmt Requsting of one or more pins has failed\n");
     return -1;
@@ -129,7 +128,8 @@ static ssize_t light_store( struct kobject* kobj,
    *  is either a 0 or 1 
    */
   if(count != 6 || buf[1] != ' ' || buf[3] != ' ' || buf[5] != '\n') {
-    return 0;
+    printk(KERN_INFO "buf has wrong input\n");
+    return -1;
   }
   
 
@@ -204,16 +204,13 @@ static int kmt_sysfs_init( void ) {
   /* missing code 9/9 */
   
 
-  light_kobj = kobject_create_and_add("light", NULL);
-  
-  if (light_kobj == NULL) {
+    
+  if ((light_kobj = kobject_create_and_add("light", NULL)) == NULL) {
     printk(KERN_INFO "kobject_create_and_add has failed\n");
     return -2;
   }
-
-  c = sysfs_create_file(light_kobj, &light_attr.attr);
-
-  if (c != 0) {
+  
+  if ((c = sysfs_create_file(light_kobj, &light_attr.attr)) != 0) {
     printk(KERN_INFO "sysfs_create_file has failed\n");
     return -2;
   }
