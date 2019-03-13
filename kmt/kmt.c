@@ -174,7 +174,7 @@ static struct kobject* light_kobj;
 // ### Warning! We need write-all permission so overriding check, THIS IS NOT RECOMENDED! 
 #undef VERIFY_OCTAL_PERMISSIONS
 #define VERIFY_OCTAL_PERMISSIONS(perms) (perms)
-static struct kobj_attribute light_attr = __ATTR( light, 0666, light_show, light_store );
+static const struct kobj_attribute light_attr = __ATTR( light, 0666, light_show, light_store );
 
 // ## Kernel module functions 
 // we must register a directory light in /sys/ and make a file /sys/light/light
@@ -203,7 +203,12 @@ static int kmt_sysfs_init( void ) {
   
 
   light_kobj = kobject_create_and_add("light", NULL);
-  sysfs_create_file(light_kobj, &light_attr);
+  c = sysfs_create_file(light_kobj, &light_attr);
+
+  if (c != 0) {
+    printk(KERN_INFO "sysfs has failed\n");
+    return -2;
+  }
 
   printk(KERN_INFO "kmt Finished sysfs setup.\n");
   return 0;
