@@ -29,7 +29,7 @@ MODULE_VERSION("0.1");
 #define B 22 // GPIO pin of blue on 3-led
 
 #define ON  1 // readability macro
-#define OFF 1 // readability macro
+#define OFF 0 // readability macro
 
 int led_init_ok = 0;
 int c; // used for error checking.
