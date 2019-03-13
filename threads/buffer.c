@@ -98,6 +98,7 @@ void* producer( void* vargp ) {
 
      // ## if there is a free slot we produce to fill it.
      P(&semProd);
+     P(&sem);
      if( free_slots ) {
           printf("producing for slot %d\n", last_slot);
           buff[last_slot] = produce(last_slot);
@@ -107,6 +108,7 @@ void* producer( void* vargp ) {
           }
           free_slots = free_slots - 1; // one less free slots available
      }
+     V(&sem);
      V(&semCons);
   } // end while
 
@@ -143,6 +145,7 @@ void* consumer( void* vargp ) {
       ******************************************************/
      
      P(&semCons);
+     P(&sem);
      if (num_slots - free_slots) {
           printf("consuming from slot %d value:", first_slot);
           printf(" %d \n", consume(buff[first_slot]));
@@ -153,6 +156,7 @@ void* consumer( void* vargp ) {
           }
           free_slots = free_slots + 1;      // one more free slots available
      }  
+     V(&sem);
      V(&semProd);
      
   } // end while
