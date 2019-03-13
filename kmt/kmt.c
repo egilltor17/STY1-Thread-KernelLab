@@ -52,7 +52,6 @@ static int init_light( void ) {
   c += gpio_request(G, "green");
   c += gpio_request(B, "blue");
   
-  
   if (c != 0) {
     printk(KERN_INFO "kmt Requsting of one or more pins has failed\n");
     return -1;

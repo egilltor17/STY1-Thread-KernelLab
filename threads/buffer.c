@@ -101,6 +101,7 @@ void* producer( void* vargp ) {
      P(&sem);
      if( free_slots ) {
           printf("producing for slot %d\n", last_slot);
+          fflush(stdout);
           buff[last_slot] = produce(last_slot);
           last_slot = last_slot + 1;  // filled a slot so move index
           if ( last_slot == num_slots ) {
@@ -142,7 +143,9 @@ void* consumer( void* vargp ) {
      P(&sem);
      if (num_slots - free_slots) {
           printf("consuming from slot %d value:", first_slot);
+          fflush(stdout);
           printf(" %d \n", consume(buff[first_slot]));
+          fflush(stdout);
           buff[first_slot] = -1;            // zero the slot consumed.
           first_slot = first_slot + 1;      // update buff index.
           if (first_slot == num_slots ) {
