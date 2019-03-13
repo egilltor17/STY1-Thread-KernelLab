@@ -126,18 +126,20 @@ static ssize_t light_store( struct kobject* kobj,
    *  is either a 0 or 1 
    */
 
-  buf[0] = gpio_get_value(R);
-  buf[1] = ' ';
-  buf[2] = gpio_get_value(G);
-  buf[3] = ' ';
-  buf[4] = gpio_get_value(B);
-  buf[5] = '\n';
+  char b[6];
+
+  b[0] = gpio_get_value(R);
+  b[1] = ' ';
+  b[2] = gpio_get_value(G);
+  b[3] = ' ';
+  b[4] = gpio_get_value(B);
+  b[5] = '\n';
 
   return count;
 }
 
 // ## Here is the function for reading the /sys/light/light file.
-static ssize_t light_show( struct kobject* kobj, 
+static ssize_t light_show( struct kobject *kobj, 
   struct kobj_attribute *attr, char* buf) {
   /***********************************************************
    * THIS IS THE FUNCTION THAT RUNS WHEN DATA IS READ FROM   *
@@ -195,14 +197,10 @@ static int kmt_sysfs_init( void ) {
 
   
   /* missing code 9/9 */
-  struct attribute {
-    char *name;
-    struct module *owner;
-    umode_t mode;
-  };
+  
 
-  // struct kobject* kobject_create_and_add(name, parent);
-
+  struct kobject* mmm = kobject_create_and_add("light", NULL);
+  int nnn = sysfs_create_file(mmm, light_attr);
 
   printk(KERN_INFO "kmt Finished sysfs setup.\n");
   return 0;
