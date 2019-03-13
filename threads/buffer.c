@@ -108,8 +108,8 @@ void* producer( void* vargp ) {
           }
           free_slots = free_slots - 1; // one less free slots available
      }
-     V(&sem);
      V(&semCons);
+     V(&sem);
   } // end while
 
   return NULL;
@@ -150,8 +150,8 @@ void* consumer( void* vargp ) {
           }
           free_slots = free_slots + 1;      // one more free slots available
      }  
-     V(&sem);
      V(&semProd);
+     V(&sem);
      
   } // end while
   return NULL;
