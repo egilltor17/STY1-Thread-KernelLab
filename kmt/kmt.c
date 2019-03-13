@@ -28,9 +28,8 @@ MODULE_VERSION("0.1");
 #define G 23 // GPIO pin of green on 3-led
 #define B 22 // GPIO pin of blue on 3-led
 
-
-#define ON  1 
-#define OFF 1 
+#define ON  1 // readability macro
+#define OFF 1 // readability macro
 
 int led_init_ok = 0;
 int c; // used for error checking.
@@ -128,13 +127,12 @@ static ssize_t light_store( struct kobject* kobj,
    */
 
   buf[0] = gpio_get_value(R);
-  buf[1] = gpio_get_value(G);
-  buf[2] = gpio_get_value(B);
-  /* gpio_set_value(R, buf[0]);
-  gpio_set_value(G, buf[1]);
-  gpio_set_value(B, buf[2]); */
+  buf[1] = ' ';
+  buf[2] = gpio_get_value(G);
+  buf[3] = ' ';
+  buf[4] = gpio_get_value(B);
+  buf[5] = '\n';
 
-  
   return count;
 }
 
@@ -157,11 +155,11 @@ static ssize_t light_show( struct kobject* kobj,
    */
 
   gpio_set_value(R, buf[0]);
-  gpio_set_value(G, buf[1]);
-  gpio_set_value(B, buf[2]);
+  gpio_set_value(G, buf[2]);
+  gpio_set_value(B, buf[4]);
 
   // THE RETURN VALUE SHOULD BE THE LENGTH OF THE STRING IN buf.
-  return 3;
+  return 6;
 }
 
 // ## sysfs variables ## 
@@ -197,6 +195,12 @@ static int kmt_sysfs_init( void ) {
 
   
   /* missing code 9/9 */
+  struct attribute {
+    char *name;
+    struct module *owner;
+    umode_t mode;
+  };
+
   // struct kobject* kobject_create_and_add(name, parent);
 
 
