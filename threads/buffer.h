@@ -27,11 +27,10 @@ int consumers_run;
  * (semaphors) YOU NEED. THEY ARE HOWEVER INITIALIZED * 
  * IN THE IMPL. OF buffer_init() IN buffer.c          *
  ******************************************************/
-sem_t sem;
-int pshared;
-int ret;
-int value;
 
+sem_t semCons;
+sem_t semProd;
+sem_t sem;
 // ## Random sleep function in milliseconds ##################//
 long rand_sleep(int ms);
 
