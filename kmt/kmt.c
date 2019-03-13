@@ -129,6 +129,7 @@ static ssize_t light_store( struct kobject* kobj,
    *  is either a 0 or 1 
    */
   if(count != 6 || buf[1] != ' ' || buf[3] != ' ' || buf[5] != '\n') {
+    printk(KERN_INFO "buf has wrong input\n");
     return -1;
   }
   
