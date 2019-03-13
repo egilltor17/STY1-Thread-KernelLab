@@ -202,8 +202,8 @@ static int kmt_sysfs_init( void ) {
   /* missing code 9/9 */
   
 
-  struct kobject* light_kobj = kobject_create_and_add("light", NULL);
-  int nnn = sysfs_create_file(light_kobj, &light_attr);
+  light_kobj = kobject_create_and_add("light", NULL);
+  sysfs_create_file(light_kobj, &light_attr);
 
   printk(KERN_INFO "kmt Finished sysfs setup.\n");
   return 0;
