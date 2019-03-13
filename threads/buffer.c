@@ -111,6 +111,8 @@ void* producer( void* vargp ) {
      }
      V(&semCons);
      V(&sem);
+     Sleep(1);
+     
   } // end while
 
   return NULL;
@@ -155,6 +157,7 @@ void* consumer( void* vargp ) {
      }  
      V(&semProd);
      V(&sem);
+     Sleep(1);
      
   } // end while
   return NULL;
