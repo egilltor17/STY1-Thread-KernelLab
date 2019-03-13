@@ -201,10 +201,16 @@ static int kmt_sysfs_init( void ) {
   
 
   light_kobj = kobject_create_and_add("light", NULL);
-  c = sysfs_create_file(light_kobj, &light_attr);
+  
+  if (light_kobj == NULL) {
+    printk(KERN_INFO "kobject_create_and_add has failed\n");
+    return -2;
+  }
+
+  c = sysfs_create_file(light_kobj, &light_attr.attr);
 
   if (c != 0) {
-    printk(KERN_INFO "sysfs has failed\n");
+    printk(KERN_INFO "sysfs_create_file has failed\n");
     return -2;
   }
 
