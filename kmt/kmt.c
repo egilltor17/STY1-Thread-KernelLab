@@ -102,6 +102,9 @@ static void exit_light ( void ) {
 
   
   /* missing code 6/9 */ 
+  gpio_set_value(R, OFF);
+  gpio_set_value(G, OFF);
+  gpio_set_value(B, OFF);
   gpio_free(R);
   gpio_free(G);
   gpio_free(B);
@@ -199,8 +202,8 @@ static int kmt_sysfs_init( void ) {
   /* missing code 9/9 */
   
 
-  struct kobject* mmm = kobject_create_and_add("light", NULL);
-  int nnn = sysfs_create_file(mmm, light_attr);
+  struct kobject* light_kobj = kobject_create_and_add("light", NULL);
+  int nnn = sysfs_create_file(light_kobj, &light_attr);
 
   printk(KERN_INFO "kmt Finished sysfs setup.\n");
   return 0;
@@ -214,7 +217,7 @@ static void kmt_sysfs_exit( void ) {
 }
 
 static int __init init_kmt( void ) {
-  int ret =0;
+  int ret = 0;
   ret = init_light( );
   ret = kmt_sysfs_init( );
   return ret;
