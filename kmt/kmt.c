@@ -128,15 +128,10 @@ static ssize_t light_store( struct kobject* kobj,
   /* The input is a string of the format "R G B\n" where each letter 
    *  is either a 0 or 1 
    */
-
-  char b[6];
-
-  b[0] = gpio_get_value(R);
-  b[1] = ' ';
-  b[2] = gpio_get_value(G);
-  b[3] = ' ';
-  b[4] = gpio_get_value(B);
-  b[5] = '\n';
+  
+  gpio_set_value(R, buf[0]);
+  gpio_set_value(G, buf[2]);
+  gpio_set_value(B, buf[4]);
 
   return count;
 }
@@ -159,9 +154,12 @@ static ssize_t light_show( struct kobject *kobj,
    *  is either a 0 or 1 
    */
 
-  gpio_set_value(R, buf[0]);
-  gpio_set_value(G, buf[2]);
-  gpio_set_value(B, buf[4]);
+  buf[0] = gpio_get_value(R);
+  buf[1] = ' ';
+  buf[2] = gpio_get_value(G);
+  buf[3] = ' ';
+  buf[4] = gpio_get_value(B);
+  buf[5] = '\n';
 
   // THE RETURN VALUE SHOULD BE THE LENGTH OF THE STRING IN buf.
   return 6;
