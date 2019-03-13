@@ -166,7 +166,7 @@ void* consumer( void* vargp ) {
 pthread_t spawn_producer( thread_info *arg )
 {
      printf("Spawning thread %d as a producer \n", arg->thread_nr);
-    
+     fflush(stdout);
      /******************************************************
       * MISSING CODE 5/6                                   *
       * HERE YOU MUST CREATE A producer THREAD HERE        *
@@ -180,7 +180,7 @@ pthread_t spawn_producer( thread_info *arg )
 pthread_t spawn_consumer( thread_info *arg )
 {
      printf("Spawning thread %d as a consumer\n", arg->thread_nr);
-
+     fflush(stdout);
      /******************************************************
       * MISSING CODE 6/6                                   *
       * HERE YOU MUST CREATE A consumer THREAD HERE        *
