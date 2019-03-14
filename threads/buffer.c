@@ -36,7 +36,8 @@ void buffer_init(unsigned int buffersize) {
       ******************************************************/
      Sem_init(&semCons, 0, 0);
      Sem_init(&semProd, 0, buffersize);
-     Sem_init(&sem, 0, 1);
+     Sem_init(&semA, 0, 1);
+     Sem_init(&semB, 0, 1);
      // ## Try to open the /sys/light/light file.
      if( (light = fopen(LIGHTFILE, "r+")) == NULL) { 
           // failed and thus we open a local directory file instead.
