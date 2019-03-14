@@ -102,9 +102,9 @@ void* producer( void* vargp ) {
      P(&mutex);     //only one thread in critical section at once, not matter what hes doing
      if( free_slots ) {
           int slot = last_slot;
-          last_slot = last_slot + 1;  // filled a slot so move index
+          last_slot = last_slot + 1;    // filled a slot so move index
           if ( last_slot == num_slots ) {
-               last_slot = 0;         // we must not go out-of-bounds.
+               last_slot = 0;           // we must not go out-of-bounds.
           }
           free_slots = free_slots - 1;  // one less free slots available
           V(&mutex);                    //critical section over
@@ -147,10 +147,10 @@ void* consumer( void* vargp ) {
      P(&mutex);
      if (num_slots - free_slots) {
           int slot = first_slot;
-          buff[first_slot] = -1;            // zero the slot consumed.
-          first_slot = first_slot + 1;      // update buff index.
+          buff[first_slot] = -1;             // zero the slot consumed.
+          first_slot = first_slot + 1;       // update buff index.
           if (first_slot == num_slots ) {
-               first_slot = 0;              // we must not go out-of-bounds.
+               first_slot = 0;               // we must not go out-of-bounds.
           }
           free_slots = free_slots + 1;       // one more free slots 
           V(&mutex);                         //critical section over
