@@ -99,17 +99,17 @@ void* producer( void* vargp ) {
 
      // ## if there is a free slot we produce to fill it.
      P(&semProd);
-     P(&mutex);
+     P(&mutex);     //only one thread in critical section at once, not matter what hes doing
      if( free_slots ) {
           int slot = last_slot;
           last_slot = last_slot + 1;  // filled a slot so move index
           if ( last_slot == num_slots ) {
                last_slot = 0;         // we must not go out-of-bounds.
           }
-          free_slots = free_slots - 1; // one less free slots available
-          V(&mutex);
-          buff[slot] = produce(slot);
-          P(&mutex);
+          free_slots = free_slots - 1;  // one less free slots available
+          V(&mutex);                    //critical section over
+          buff[slot] = produce(slot);   //many threads can produce at once
+          P(&mutex);                    //print is not safe
           printf("producing for slot %d\n", slot);
      }
      V(&mutex);
@@ -152,10 +152,10 @@ void* consumer( void* vargp ) {
           if (first_slot == num_slots ) {
                first_slot = 0;              // we must not go out-of-bounds.
           }
-          free_slots = free_slots + 1;      // one more free slots 
-          V(&mutex);
-          int cons = consume(buff[slot]);
-          P(&mutex);
+          free_slots = free_slots + 1;       // one more free slots 
+          V(&mutex);                         //critical section over
+          int cons = consume(buff[slot]);    //many threads can consume at once
+          P(&mutex);                         //print is not safe
           printf("consuming from slot %d value: %d\n", slot, cons);
      }  
      V(&mutex);
