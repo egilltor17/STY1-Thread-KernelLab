@@ -30,7 +30,7 @@ int consumers_run;
 
 sem_t semCons;
 sem_t semProd;
-sem_t sem;
+sem_t mutex;
 
 // ## Random sleep function in milliseconds ##################//
 long rand_sleep(int ms);

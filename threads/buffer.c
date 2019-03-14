@@ -34,9 +34,9 @@ void buffer_init(unsigned int buffersize) {
       * NOTE!!! YOU MUST FIRST CREATE THE SEMAPHORES       *
       * IN buffer.h                                        *
       ******************************************************/
-     Sem_init(&semCons, 0, 0);
-     Sem_init(&semProd, 0, buffersize);
-     Sem_init(&mutex, 0, 1);
+     Sem_init(&semCons, 0, 0);           /* full slots */
+     Sem_init(&semProd, 0, buffersize);  /* empty slots */
+     Sem_init(&mutex, 0, 1);             /* mutex */
 
      // ## Try to open the /sys/light/light file.
      if( (light = fopen(LIGHTFILE, "r+")) == NULL) { 
