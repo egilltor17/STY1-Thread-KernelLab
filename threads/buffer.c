@@ -36,8 +36,8 @@ void buffer_init(unsigned int buffersize) {
       ******************************************************/
      Sem_init(&semCons, 0, 0);
      Sem_init(&semProd, 0, buffersize);
-     Sem_init(&semA, 0, 1);
-     Sem_init(&semB, 0, 1);
+     Sem_init(&mutex, 0, 1);
+
      // ## Try to open the /sys/light/light file.
      if( (light = fopen(LIGHTFILE, "r+")) == NULL) { 
           // failed and thus we open a local directory file instead.
@@ -99,7 +99,7 @@ void* producer( void* vargp ) {
 
      // ## if there is a free slot we produce to fill it.
      P(&semProd);
-     P(&semA);
+     P(&mutex);
      if( free_slots ) {
           int slot = last_slot;
           last_slot = last_slot + 1;  // filled a slot so move index
@@ -107,12 +107,12 @@ void* producer( void* vargp ) {
                last_slot = 0;         // we must not go out-of-bounds.
           }
           free_slots = free_slots - 1; // one less free slots available
-          V(&semA);
+          V(&mutex);
           buff[slot] = produce(slot);
-          P(&semA);
+          P(&mutex);
           printf("producing for slot %d\n", slot);
      }
-     V(&semA);
+     V(&mutex);
      V(&semCons);
      
   } // end while
@@ -144,7 +144,7 @@ void* consumer( void* vargp ) {
       ******************************************************/
      
      P(&semCons);
-     P(&semB);
+     P(&mutex);
      if (num_slots - free_slots) {
           int slot = first_slot;
           buff[first_slot] = -1;            // zero the slot consumed.
@@ -153,12 +153,12 @@ void* consumer( void* vargp ) {
                first_slot = 0;              // we must not go out-of-bounds.
           }
           free_slots = free_slots + 1;      // one more free slots 
-          V(&semB);
+          V(&mutex);
           int cons = consume(buff[slot]);
-          P(&semB);
+          P(&mutex);
           printf("consuming from slot %d value: %d\n", slot, cons);
      }  
-     V(&semB);
+     V(&mutex);
      V(&semProd);
      
   } // end while

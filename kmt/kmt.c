@@ -61,8 +61,8 @@ static int init_light( void ) {
   /***********************************************************
    * HERE YOU HAVE TO SET EACH PINS DIRECTION (IN OR OUT)    *
    * USE THE gpio_direction_output() FUNCTION FOR THIS.      *
-   * int gpio_direction_input(unsigned int gpio);
-   * int gpio_direction_output(unsigned int gpio, int value);
+   * int gpio_direction_input(unsigned int gpio);            *
+   * int gpio_direction_output(unsigned int gpio, int value);*
    ***********************************************************/
 
   /* missing code 4/9 */ 
@@ -100,7 +100,9 @@ static void exit_light ( void ) {
    * REMEMBER THAT YOU WILL NEED TO RELEASE THE GPIO PINS    *
    ***********************************************************/
 
-  /* missing code 6/9 */ 
+  /* missing code 6/9 
+   * turn off all the lights before freeing the pins
+   */ 
   gpio_set_value(R, OFF);
   gpio_set_value(G, OFF);
   gpio_set_value(B, OFF);
@@ -124,13 +126,15 @@ static ssize_t light_store( struct kobject* kobj,
 
   /* missing code 7/9 */
   /* The input is a string of the format "R G B\n" where each letter 
-   *  is either a 0 or 1 
+   * is either a 0 or 1 
+   * 
+   * Valiate the input before trying to read from buf  
    */
   if(count != 6 || buf[1] != ' ' || buf[3] != ' ' || buf[5] != '\n') {
     printk(KERN_INFO "buf has wrong input format\n");
     return -2;
   }
-  
+  /* thurns the LEDs on if the buf has 1's at the correct indexses, off otherwise */
   gpio_set_value(R, buf[0] == '1');
   gpio_set_value(G, buf[2] == '1');
   gpio_set_value(B, buf[4] == '1');

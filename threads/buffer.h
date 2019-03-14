@@ -30,8 +30,8 @@ int consumers_run;
 
 sem_t semCons;
 sem_t semProd;
-sem_t semA;
-sem_t semB;
+sem_t sem;
+
 // ## Random sleep function in milliseconds ##################//
 long rand_sleep(int ms);
 
