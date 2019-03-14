@@ -99,9 +99,10 @@ void* producer( void* vargp ) {
      // ## if there is a free slot we produce to fill it.
      P(&semProd);
      if( free_slots ) {
-          printf("producing for slot %d\n", last_slot);
-          fflush(stdout);
-          int p = produce(last_slot);
+          Sio_puts("producing for slot ");
+          Sio_putl((long)last_slot);
+          Sio_puts("\n");
+          int p = produce(last_slot)
           P(&sem);
           buff[last_slot] = p;
           last_slot = last_slot + 1;  // filled a slot so move index
@@ -112,7 +113,6 @@ void* producer( void* vargp ) {
      }
      V(&semCons);
      V(&sem);
-     //Sleep(0);
      
   } // end while
 
@@ -144,9 +144,12 @@ void* consumer( void* vargp ) {
      
      P(&semCons);
      if (num_slots - free_slots) {
-          printf("consuming from slot %d value:", first_slot);
-          fflush(stdout);
-          consume(buff[first_slot]);
+          Sio_puts("consuming from slot ");
+          Sio_putl((long)first_slot);
+          Sio_puts(" value: ");
+          int p = consume(buff[first_slot]);
+          Sio_putl((long)p);
+          Sio_puts(" \n");
           P(&sem);
           buff[first_slot] = -1;            // zero the slot consumed.
           first_slot = first_slot + 1;      // update buff index.
@@ -157,7 +160,6 @@ void* consumer( void* vargp ) {
      }  
      V(&semProd);
      V(&sem);
-     //Sleep(0);
      
   } // end while
   return NULL;
