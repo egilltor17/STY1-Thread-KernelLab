@@ -107,7 +107,6 @@ void* producer( void* vargp ) {
                last_slot = 0;         // we must not go out-of-bounds.
           }
           free_slots = free_slots - 1; // one less free slots available
-          counter = counter + 1;
           V(&mutex);
           buff[slot] = produce(slot);
           P(&mutex);
