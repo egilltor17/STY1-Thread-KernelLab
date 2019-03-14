@@ -128,13 +128,13 @@ static ssize_t light_store( struct kobject* kobj,
   /* The input is a string of the format "R G B\n" where each letter 
    * is either a 0 or 1 
    * 
-   * Valiate the input before trying to read from buf  
+   * Validate the input before trying to read from buf  
    */
   if(count != 6 || buf[1] != ' ' || buf[3] != ' ' || buf[5] != '\n') {
     printk(KERN_INFO "buf has wrong input format\n");
     return -2;
   }
-  /* thurns the LEDs on if the buf has 1's at the correct indexses, off otherwise */
+  /* turns the LEDs on if the buf has 1's at the correct indices, off otherwise */
   gpio_set_value(R, buf[0] == '1');
   gpio_set_value(G, buf[2] == '1');
   gpio_set_value(B, buf[4] == '1');
@@ -204,6 +204,7 @@ static int kmt_sysfs_init( void ) {
   
   /* missing code 9/9 */
     
+  /* need to catch errors, when creating kernel objects */  
   if ((light_kobj = kobject_create_and_add("light", NULL)) == NULL) {
     printk(KERN_INFO "kobject_create_and_add has failed\n");
     return -2;
