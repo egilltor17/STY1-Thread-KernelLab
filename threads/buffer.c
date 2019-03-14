@@ -102,7 +102,7 @@ void* producer( void* vargp ) {
           Sio_puts("producing for slot ");
           Sio_putl((long)last_slot);
           Sio_puts("\n");
-          int p = produce(last_slot)
+          int p = produce(last_slot);
           P(&sem);
           buff[last_slot] = p;
           last_slot = last_slot + 1;  // filled a slot so move index

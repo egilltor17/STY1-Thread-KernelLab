@@ -74,17 +74,18 @@ static int init_light( void ) {
     printk(KERN_INFO "kmt Setting Directon of one or more pins has failed\n");
     return -2;
   }
-  printk(KERN_INFO "kmt Waiting 2 seconds then turning defaulting to lights off.\n");
-  
-  /* missing code 5/9 */ 
-  mdelay(2000);
-  gpio_set_value(R, OFF);
-  gpio_set_value(G, OFF);
-  gpio_set_value(B, OFF);
 
   /***********************************************************
    * HINT: mdelay() and gpio_set_value()                     *
    ***********************************************************/
+  /* missing code 5/9 */ 
+  
+  printk(KERN_INFO "kmt Waiting 2 seconds then turning defaulting to lights off.\n");
+  
+  mdelay(2000);
+  gpio_set_value(R, OFF);
+  gpio_set_value(G, OFF);
+  gpio_set_value(B, OFF);
   
   printk(KERN_INFO "kmt light setup completed successfully.\n");
   led_init_ok = 1; 
@@ -99,7 +100,6 @@ static void exit_light ( void ) {
    * REMEMBER THAT YOU WILL NEED TO RELEASE THE GPIO PINS    *
    ***********************************************************/
 
-  
   /* missing code 6/9 */ 
   gpio_set_value(R, OFF);
   gpio_set_value(G, OFF);
@@ -122,17 +122,15 @@ static ssize_t light_store( struct kobject* kobj,
    * INPUT AND SET THE LIGHTS ACCORDINGLY.                   *
    ***********************************************************/
 
-  
   /* missing code 7/9 */
   /* The input is a string of the format "R G B\n" where each letter 
    *  is either a 0 or 1 
    */
   if(count != 6 || buf[1] != ' ' || buf[3] != ' ' || buf[5] != '\n') {
-    printk(KERN_INFO "buf has wrong input\n");
-    return -1;
+    printk(KERN_INFO "buf has wrong input format\n");
+    return -2;
   }
   
-
   gpio_set_value(R, buf[0] == '1');
   gpio_set_value(G, buf[2] == '1');
   gpio_set_value(B, buf[4] == '1');
@@ -152,7 +150,6 @@ static ssize_t light_show( struct kobject *kobj,
    * THE RETURN VALUE SHOULD BE THE LENGTH OF THE STRING.    *
    ***********************************************************/
 
-  
   /* missing code 8/9 */
   /* The input is a string of the format "R G B\n" where each letter 
    *  is either a 0 or 1 
@@ -202,15 +199,13 @@ static int kmt_sysfs_init( void ) {
 
   
   /* missing code 9/9 */
-  
-
     
   if ((light_kobj = kobject_create_and_add("light", NULL)) == NULL) {
     printk(KERN_INFO "kobject_create_and_add has failed\n");
     return -2;
   }
   
-  if ((c = sysfs_create_file(light_kobj, &light_attr.attr)) != 0) {
+  if (sysfs_create_file(light_kobj, &light_attr.attr) != 0) {
     printk(KERN_INFO "sysfs_create_file has failed\n");
     return -2;
   }
