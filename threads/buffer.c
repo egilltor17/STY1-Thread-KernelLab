@@ -101,7 +101,7 @@ void* producer( void* vargp ) {
      if( free_slots ) {
           printf("producing for slot %d\n", last_slot);
           fflush(stdout);
-          int p = produce(last_slot)
+          int p = produce(last_slot);
           P(&sem);
           buff[last_slot] = p;
           last_slot = last_slot + 1;  // filled a slot so move index
