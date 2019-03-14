@@ -98,21 +98,21 @@ void* producer( void* vargp ) {
 
      // ## if there is a free slot we produce to fill it.
      P(&semProd);
+     P(&semA);
      if( free_slots ) {
-          Sio_puts("producing for slot ");
-          Sio_putl((long)last_slot);
-          Sio_puts("\n");
-          int p = produce(last_slot);
-          P(&sem);
-          buff[last_slot] = p;
+          int slot = last_slot;
           last_slot = last_slot + 1;  // filled a slot so move index
           if ( last_slot == num_slots ) {
                last_slot = 0;         // we must not go out-of-bounds.
           }
           free_slots = free_slots - 1; // one less free slots available
+          V(&semA);
+          buff[slot] = produce(slot);
+          P(&semA);
+          printf("producing for slot %d\n", slot);
      }
+     V(&semA);
      V(&semCons);
-     V(&sem);
      
   } // end while
 
@@ -143,23 +143,22 @@ void* consumer( void* vargp ) {
       ******************************************************/
      
      P(&semCons);
+     P(&semB);
      if (num_slots - free_slots) {
-          Sio_puts("consuming from slot ");
-          Sio_putl((long)first_slot);
-          Sio_puts(" value: ");
-          int p = consume(buff[first_slot]);
-          Sio_putl((long)p);
-          Sio_puts(" \n");
-          P(&sem);
+          int slot = first_slot;
           buff[first_slot] = -1;            // zero the slot consumed.
           first_slot = first_slot + 1;      // update buff index.
           if (first_slot == num_slots ) {
                first_slot = 0;              // we must not go out-of-bounds.
           }
-          free_slots = free_slots + 1;      // one more free slots available
+          free_slots = free_slots + 1;      // one more free slots 
+          V(&semB);
+          int cons = consume(buff[slot]);
+          P(&semB);
+          printf("consuming from slot %d value: %d\n", slot, cons);
      }  
+     V(&semB);
      V(&semProd);
-     V(&sem);
      
   } // end while
   return NULL;
