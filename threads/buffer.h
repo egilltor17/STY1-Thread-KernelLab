@@ -32,6 +32,8 @@ sem_t semCons;
 sem_t semProd;
 sem_t mutex;
 
+static long counter = 0;
+
 // ## Random sleep function in milliseconds ##################//
 long rand_sleep(int ms);
 
