@@ -4,3 +4,7 @@
 # IDE
 .vs
 .vscode
+
+# Archive
+*.zip
+*.tar.gz
